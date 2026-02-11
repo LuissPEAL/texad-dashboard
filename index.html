@@ -1,242 +1,221 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TEXAD Sales Analytics | Power BI Dashboard</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Feliz Cumpleaños Lau</title>
 
-        :root {
-            --navy: #0f172a;
-            --slate: #1e293b;
-            --steel: #334155;
-            --gold: #eab308;
-            --gold-light: #f59e0b;
-            --white: #f8fafc;
-            --gray: #94a3b8;
-        }
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
 
-        body {
-            background: linear-gradient(135deg, var(--navy) 0%, var(--slate) 100%);
-            color: var(--white);
-            min-height: 100vh;
-            padding: 20px;
-        }
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
 
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
+body{
+    font-family:'Roboto',sans-serif;
+    overflow:hidden;
+    height:100vh;
+}
 
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 30px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            margin-bottom: 40px;
-        }
+.background{
+    position:fixed;
+    width:100%;
+    height:100%;
+    background:url('https://i.postimg.cc/qRWtBJGG/The-Barnyard-Rick-Collins.jpg') center/cover no-repeat;
+    z-index:1;
+}
 
-        .logo {
-            font-size: 1.8rem;
-            font-weight: 700;
-            background: linear-gradient(90deg, var(--white), var(--gold-light));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
+.overlay{
+    position:fixed;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.3);
+    z-index:2;
+}
 
-        .profile {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            font-size: 0.95rem;
-            color: var(--gray);
-        }
+.messages-container{
+    position:fixed;
+    width:100%;
+    height:100%;
+    z-index:10;
+    padding:20px;
+}
 
-        .profile-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(45deg, var(--steel), var(--slate));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-        }
+.whatsapp-message{
+    position:absolute;
+    max-width:260px;
+    padding:12px 16px;
+    background:#fff;
+    border-radius:12px;
+    box-shadow:0 4px 12px rgba(0,0,0,.25);
+    font-size:14px;
+    opacity:0;
+    transform:scale(.8) translateY(20px);
+    transition:.5s;
+}
 
-        .main-content {
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 30px;
-            margin-bottom: 40px;
-        }
+.whatsapp-message.show{
+    opacity:1;
+    transform:scale(1) translateY(0);
+}
 
-        @media (max-width: 900px) {
-            .main-content {
-                grid-template-columns: 1fr;
-            }
-        }
+.time{
+    font-size:10px;
+    text-align:right;
+    margin-top:4px;
+    color:#667781;
+}
 
-        .info-panel {
-            background: rgba(15, 23, 42, 0.6);
-            border-radius: 16px;
-            padding: 30px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.05);
-        }
+/* posiciones */
+.pos-1{top:15%;left:10%;}
+.pos-2{top:25%;right:10%;}
+.pos-3{top:45%;left:8%;}
+.pos-4{top:60%;right:12%;}
+.pos-5{top:75%;left:15%;}
+.pos-6{top:35%;left:50%;transform:translateX(-50%);}
+.pos-7{top:20%;left:35%;}
+.pos-8{top:55%;right:25%;}
 
-        .info-panel h2 {
-            font-size: 1.4rem;
-            margin-bottom: 20px;
-            color: var(--gold);
-            font-weight: 600;
-        }
+/* botón música */
+.music-control{
+    position:fixed;
+    bottom:30px;
+    right:30px;
+    width:60px;
+    height:60px;
+    background:#fff;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:28px;
+    cursor:pointer;
+    z-index:1000;
+}
 
-        .description {
-            line-height: 1.7;
-            color: var(--gray);
-            margin-bottom: 25px;
-            font-size: 0.95rem;
-        }
+/* pantalla inicio */
+.start-button{
+    position:fixed;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,.8);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:2000;
+    cursor:pointer;
+    transition:.5s;
+}
 
-        .specs {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-        }
+.start-button.hidden{
+    opacity:0;
+    pointer-events:none;
+}
 
-        .spec-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 0.9rem;
-            color: var(--gray);
-        }
-
-        .spec-item i {
-            color: var(--gold);
-            font-size: 14px;
-        }
-
-        .dashboard-container {
-            background: rgba(15, 23, 42, 0.6);
-            border-radius: 16px;
-            overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.05);
-            backdrop-filter: blur(10px);
-        }
-
-        .dashboard-header {
-            padding: 20px;
-            background: rgba(0,0,0,0.2);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .dashboard-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .dashboard-title i {
-            color: var(--gold);
-        }
-
-        .iframe-container {
-            height: 600px;
-            width: 100%;
-        }
-
-        .iframe-container iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-            display: block;
-        }
-
-        .action-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            color: var(--gold);
-            text-decoration: none;
-            font-weight: 500;
-            padding: 8px 16px;
-            border-radius: 8px;
-            transition: all 0.2s ease;
-            font-size: 0.9rem;
-        }
-
-        .action-link:hover {
-            background: rgba(234, 179, 8, 0.1);
-        }
-
-        footer {
-            text-align: center;
-            padding: 20px 0;
-            color: var(--gray);
-            font-size: 0.9rem;
-            border-top: 1px solid rgba(255,255,255,0.05);
-            margin-top: 20px;
-        }
-
-        .highlight {
-            color: var(--gold-light);
-            font-weight: 600;
-        }
-    </style>
+.start-content{
+    background:white;
+    padding:40px 60px;
+    border-radius:20px;
+    text-align:center;
+}
+</style>
 </head>
+
 <body>
-    <div class="container">
-        <div class="header">
-            <div class="logo">TEXAD  | Power BI & Python Dashboard </div>
-            <div class="profile">
-                <div class="profile-icon">
-                    <i class="fas fa-user"></i>
-                </div>
-                <span>Luis Perez A.</span>
-            </div>
-        </div>
 
-            <div class="dashboard-container">
-                <div class="dashboard-header">
-                    <div class="dashboard-title">
-                        <i class="fab fa-microsoft"></i>
-                        TEXAD - Dashboard 
-                    </div>
-                    <a href="https://app.powerbi.com/view?r=eyJrIjoiMmVkNTllYjQtZDEwYy00ZDgzLWJjZDktZDI0N2YxNzEwMDIzIiwidCI6IjU4OTViMDU4LTU5YzQtNDJjOS1iMTI3LTcwODQ5OGFmYjQ1MiJ9" 
-                       target="_blank" 
-                       class="action-link">
-                        <i class="fas fa-external-link-alt"></i>
-                        Ver Completo
-                    </a>
-                </div>
-                <div class="iframe-container">
-                    <iframe 
-                        src="https://app.powerbi.com/view?r=eyJrIjoiMmVkNTllYjQtZDEwYy00ZDgzLWJjZDktZDI0N2YxNzEwMDIzIiwidCI6IjU4OTViMDU4LTU5YzQtNDJjOS1iMTI3LTcwODQ5OGFmYjQ1MiJ9" 
-                        allowFullScreen="true">
-                    </iframe>
-                </div>
-            </div>
-        </div>
+<div class="background"></div>
+<div class="overlay"></div>
+<div class="messages-container" id="messagesContainer"></div>
 
-        <footer>
-            <p>Todos los derechos reservados  | © 2025</p>
-        </footer>
+<!-- YouTube oculto -->
+<div style="position:absolute;width:0;height:0;overflow:hidden;">
+    <iframe 
+        id="youtubePlayer"
+        width="0"
+        height="0"
+        src=""
+        frameborder="0"
+        allow="autoplay"
+        allowfullscreen>
+    </iframe>
+</div>
+
+<div class="music-control" onclick="toggleMusic()">
+    <span id="musicIcon">🔊</span>
+</div>
+
+<div class="start-button" id="startButton" onclick="startExperience()">
+    <div class="start-content">
+        <div style="font-size:48px;">🎉</div>
+        <p style="font-size:20px;font-weight:500;">¡Feliz Cumpleaños!</p>
+        <p style="font-size:14px;opacity:.7;">Toca para comenzar</p>
     </div>
+</div>
+
+<script>
+const messages=[
+{text:"Eres increíble 🤩",position:"pos-1"},
+{text:"Hoy celebramos tu vida 🥳🌟",position:"pos-2"},
+{text:"Gracias por existir 💕",position:"pos-3"},
+{text:"Un año más siendo extraordinaria 🎂🔥",position:"pos-4"},
+{text:"Brilla siempre ✨",position:"pos-5"},
+{text:"Que todos tus sueños se cumplan 🌠",position:"pos-6"},
+{text:"Hoy el mundo sonríe contigo 😄",position:"pos-7"},
+{text:"Feliz cumpleaños 🎉💖",position:"pos-8"}
+];
+
+const container=document.getElementById("messagesContainer");
+let currentSet=0;
+const perSet=4;
+let elements=[];
+
+messages.forEach(msg=>{
+    const div=document.createElement("div");
+    div.className="whatsapp-message "+msg.position;
+    const now=new Date();
+    div.innerHTML=msg.text+"<div class='time'>"+now.getHours()+":"+String(now.getMinutes()).padStart(2,"0")+"</div>";
+    container.appendChild(div);
+    elements.push(div);
+});
+
+function showMessages(){
+    elements.forEach(el=>el.classList.remove("show"));
+    const start=currentSet*perSet;
+    for(let i=0;i<perSet;i++){
+        const index=(start+i)%elements.length;
+        setTimeout(()=>elements[index].classList.add("show"),i*200);
+    }
+    currentSet=(currentSet+1)%Math.ceil(elements.length/perSet);
+}
+
+showMessages();
+setInterval(showMessages,5000);
+
+/* 🎵 Música */
+let musicPlaying=false;
+const videoID="2usSHG_oGXM";
+
+function startExperience(){
+    document.getElementById("startButton").classList.add("hidden");
+    const iframe=document.getElementById("youtubePlayer");
+    iframe.src=`https://www.youtube.com/embed/${videoID}?autoplay=1&loop=1&playlist=${videoID}&controls=0`;
+    musicPlaying=true;
+}
+
+function toggleMusic(){
+    const iframe=document.getElementById("youtubePlayer");
+    const icon=document.getElementById("musicIcon");
+
+    if(musicPlaying){
+        iframe.src="";
+        icon.textContent="🔇";
+        musicPlaying=false;
+    }else{
+        iframe.src=`https://www.youtube.com/embed/${videoID}?autoplay=1&loop=1&playlist=${videoID}&controls=0`;
+        icon.textContent="🔊";
+        musicPlaying=true;
+    }
+}
+</script>
+
 </body>
 </html>
-
